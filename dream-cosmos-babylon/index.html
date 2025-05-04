@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <style>
+      html, body, canvas {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: black;
+      }
+
+      @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+
+      #moonFoxUI {
+        position: fixed;
+        bottom: 2vh;
+        right: 4vw;
+        width: 100px;
+        height: auto;
+        z-index: 1000;
+        pointer-events: none;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+      }
+
+      #moonFoxUI img {
+        max-width: 100%;
+        height: auto;
+        transform: translateX(50%);
+      }
+
+      #moonFoxBubble {
+  position: fixed;
+  bottom: 12vh;
+  right: 10vw;
+  max-width: 260px;
+  padding: 14px 20px;
+  border: 2px solid #00ccff;
+  border-radius: 14px;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  font-size: 17px;
+  color: #bdeaff;
+  background: rgba(0, 0, 20, 0.6);
+  box-shadow:
+    0 0 8px #00ccff,
+    0 0 20px rgba(0, 200, 255, 0.4),
+    inset 0 0 10px rgba(0, 200, 255, 0.3);
+  backdrop-filter: blur(6px);
+  z-index: 1001;
+  animation: fadeIn 1s ease-out;
+}
+
+@media (max-width: 600px) {
+  #moonFoxBubble {
+    bottom: 18vh;
+    right: 6vw;
+    max-width: 220px;
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+  #moonFoxUI {
+    right: 6vw;
+    bottom: 3vh;
+    width: 60px;
+  }
+}
+
+
+#filterUI {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 90vw;
+  min-width: 700px;
+
+  background: radial-gradient(ellipse at center, rgba(10, 10, 30, 0.8), rgba(0, 0, 20, 0.6));
+  border: 1px solid rgba(0, 0, 20, 0.6);
+  border-radius: 20px;
+  padding: 16px 24px;
+
+  color: #bdeaff;
+  font-family: 'Quicksand', sans-serif;
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.4), 0 0 24px rgba(0, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+#filterUI select,
+#filterUI input[type="checkbox"] {
+  font-size: 14px;
+  transform: scale(1.1);
+}
+
+.filterTitle {
+  font-size: 18px;
+  margin-bottom: 14px;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 0 8px #00ccff;
+}
+
+.filterRow {
+  margin-bottom: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  text-align: left;
+}
+
+#filterUI select {
+  background: rgba(255, 255, 255, 0.9);
+  color: #003344;
+  border-radius: 6px;
+  padding: 4px 10px;
+  border: none;
+  font-size: 14px;
+  box-shadow: 0 0 6px rgba(0, 200, 255, 0.2);
+}
+
+#filterUI input[type="checkbox"] {
+  transform: scale(1.2);
+  accent-color: #00ccff;
+  margin-right: 4px;
+}
+
+      @keyframes fadeIn {
+        0% { opacity: 0; transform: scale(0.95); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+
+      #hoverBubble {
+  position: fixed;
+  background: linear-gradient(135deg, #8a6ff0, #a3e6ff);
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 12px 16px;
+  max-width: 320px;
+  border-radius: 16px;
+  box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.3);
+  text-shadow:
+    1px 1px 4px rgba(255, 255, 255, 0.5),
+    0 0 6px #aeefff;
+  animation: fadeInUp 0.8s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 1002;
+  pointer-events: none;
+  display: none;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#viewToggleUI {
+  position: absolute;
+  top: 3px;
+  right: 20px;
+  z-index: 1001;
+}
+#viewToggleUI button {
+  margin: 4px;
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 8px;
+  background: #004466;
+  color: #bdeaff;
+  border: none;
+  cursor: pointer;
+}
+#viewToggleUI button:hover {
+  background: #006699;
+}
+
+@media (max-width: 600px) {
+  #filterUI {
+    width: 95vw;
+    min-width: unset;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .filterRow {
+    gap: 6px;
+  }
+
+  #filterUI select {
+    font-size: 12px;
+  }
+
+  #filterUI input[type="checkbox"] {
+    transform: scale(1.1);
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="module" src="/src/main.js"></script>
+    <canvas id="app"></canvas>
+
+    <audio id="bgm" src="/sounds/bg-universe.mp3" loop preload="auto"></audio>
+<button id="bgmToggle" style="
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  background: rgba(0,0,0,0.4);
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+">
+  🔈 Sound ON
+</button>
+
+    <!-- 💫 フィルター UI -->
+<div id="filterUI">
+  <h3 class="filterTitle">✨ Filter Dreams</h3>
+
+  <div class="filterRow">
+    <label for="categorySelect">Category:</label>
+    <select id="categorySelect">
+      <option value="">All</option>
+      <option value="Challenge">Challenge</option>
+      <option value="Adventure">Adventure</option>
+      <option value="Love & Connection">Love & Connection</option>
+      <option value="Healing">Healing</option>
+      <option value="Creation">Creation</option>
+      <option value="Growth">Growth</option>
+    </select>
+  </div>
+
+  <!-- 🌌 星座切り替えUI -->
+<div id="viewToggleUI">
+  <button id="showAllBtn">🪐 All Constellations</button>
+  <button id="showMineBtn">⭐ My Constellation</button>
+</div>
+
+  <div class="filterRow">
+    <span>Tags:</span>
+    <label><input type="checkbox" value="#Art" class="tagCheckbox"> #Art</label>
+    <label><input type="checkbox" value="#Music" class="tagCheckbox"> #Music</label>
+    <label><input type="checkbox" value="#Friendship" class="tagCheckbox"> #Friendship</label>
+    <label><input type="checkbox" value="#FutureSelf" class="tagCheckbox"> #FutureSelf</label>
+    <label><input type="checkbox" value="#Courage" class="tagCheckbox"> #Courage</label>
+    <label><input type="checkbox" value="#Freedom" class="tagCheckbox"> #Freedom</label>
+    <label><input type="checkbox" value="#Rebirth" class="tagCheckbox"> #Rebirth</label>
+    <label><input type="checkbox" value="#Healing" class="tagCheckbox"> #Healing</label>
+    <label><input type="checkbox" value="#Cosmos" class="tagCheckbox"> #Cosmos</label>
+    <label><input type="checkbox" value="#Nature" class="tagCheckbox"> #Nature</label>
+    <label><input type="checkbox" value="#Technology" class="tagCheckbox"> #Technology</label>
+    <label><input type="checkbox" value="#Flying" class="tagCheckbox"> #Flying</label>
+    <label><input type="checkbox" value="#DreamLoop" class="tagCheckbox"> #DreamLoop</label>
+  </div>
+</div>
+
+    <!-- 🌙 Moon Fox UI -->
+    <div id="moonFoxUI">
+      <img src="/textures/moonfox_idle.png" alt="Moon Fox" />
+    </div>
+
+    <!-- 💬 吹き出し UI（ランダムセリフ） -->
+    <div id="moonFoxBubble"></div>
+
+    <!-- ⭐ Hover用 吹き出しUI -->
+    <div id="hoverBubble"></div>
+
+    <script>
+      const userName = localStorage.getItem("myUserName") || "you";
+      const foxLines = [
+        `Welcome back, ${userName}! 🌙`,
+        `Hey ${userName}, this star just blinked! ✨`,
+        `Your dreams are safe here, ${userName}.`,
+        `It's ${new Date().toLocaleTimeString()} now... perfect time to wish! 🌠`,
+        "Even tiny dreams shine bright in here. 💫"
+      ];
+
+      const bubble = document.getElementById("moonFoxBubble");
+
+      function showRandomFoxLine() {
+        const randomLine = foxLines[Math.floor(Math.random() * foxLines.length)];
+        bubble.style.opacity = 0;
+        setTimeout(() => {
+          bubble.innerText = randomLine;
+          bubble.style.opacity = 1;
+        }, 500);
+      }
+
+      showRandomFoxLine();
+      setInterval(showRandomFoxLine, 6000);
+    </script>
+  </body>
+</html>
